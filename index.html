@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Adeola | Web3 Community Moderator</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Orbitron:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #151515;
+      --accent-1: #ff3864;
+      --accent-2: #ff8c42;
+      --accent-3: #00ff9f;
+      --accent-4: #00d4ff;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0a0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier Prime', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    /* Animated grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 56, 100, 0.03) 2px,
+          rgba(255, 56, 100, 0.03) 4px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 2px,
+          rgba(0, 255, 159, 0.03) 2px,
+          rgba(0, 255, 159, 0.03) 4px
+        );
+      background-size: 100px 100px;
+      animation: gridScroll 20s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes gridScroll {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(100px, 100px); }
+    }
+
+    /* Noise texture overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: 1;
+      animation: noiseMove 8s steps(10) infinite;
+    }
+
+    @keyframes noiseMove {
+      0% { transform: translate(0, 0); }
+      10% { transform: translate(-5%, -5%); }
+      20% { transform: translate(-10%, 5%); }
+      30% { transform: translate(5%, -10%); }
+      40% { transform: translate(-5%, 15%); }
+      50% { transform: translate(10%, 5%); }
+      60% { transform: translate(5%, -5%); }
+      70% { transform: translate(-10%, 10%); }
+      80% { transform: translate(15%, 0%); }
+      90% { transform: translate(0%, 10%); }
+      100% { transform: translate(0, 0); }
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Glitch effect elements */
+    .glitch-line {
+      position: fixed;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-1), transparent);
+      opacity: 0;
+      animation: glitchScan 8s linear infinite;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    @keyframes glitchScan {
+      0% { top: 0; opacity: 0; }
+      5% { opacity: 0.8; }
+      50% { top: 100%; opacity: 0.8; }
+      51% { opacity: 0; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    /* NAVIGATION */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 40px;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid var(--accent-1);
+      z-index: 1000;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      animation: slideDown 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes slideDown {
+      from { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
+      to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+    }
+
+    nav .nav-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav .logo {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: 28px;
+      color: var(--accent-3);
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      position: relative;
+      text-shadow: 
+        0 0 10px var(--accent-3),
+        0 0 20px var(--accent-3),
+        0 0 30px var(--accent-3);
+      animation: logoGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes logoGlow {
+      from { text-shadow: 0 0 10px var(--accent-3), 0 0 20px var(--accent-3); }
+      to { text-shadow: 0 0 20px var(--accent-3), 0 0 40px var(--accent-3), 0 0 60px var(--accent-3); }
+    }
+
+    nav .nav-links {
+      display: flex;
+      gap: 40px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 2px;
+    }
+
+    nav a {
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      text-transform: uppercase;
+    }
+
+    nav a::before {
+      content: '>';
+      position: absolute;
+      left: -20px;
+      opacity: 0;
+      color: var(--accent-1);
+      transition: all 0.3s ease;
+    }
+
+    nav a:hover::before {
+      left: -15px;
+      opacity: 1;
+    }
+
+    nav a:hover {
+      color: var(--accent-1);
+      transform: skewX(-5deg);
+    }
+
+    /* HERO SECTION */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-top: -80px;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120%;
+      height: 120%;
+      background: 
+        radial-gradient(circle at 30% 40%, rgba(255, 56, 100, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(0, 255, 159, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(255, 140, 66, 0.15) 0%, transparent 60%);
+      animation: heroRotate 20s linear infinite;
+      filter: blur(60px);
+    }
+
+    @keyframes heroRotate {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      animation: heroReveal 1s ease-out;
+    }
+
+    @keyframes heroReveal {
+      from { opacity: 0; transform: scale(0.8) rotateX(45deg); }
+      to { opacity: 1; transform: scale(1) rotateX(0); }
+    }
+
+    .hero-tag {
+      display: inline-block;
+      padding: 8px 20px;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      color: #000;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      transform: skewX(-10deg);
+      margin-bottom: 30px;
+      animation: tagPulse 2s ease-in-out infinite;
+      box-shadow: 0 0 30px rgba(255, 56, 100, 0.5);
+    }
+
+    @keyframes tagPulse {
+      0%, 100% { transform: skewX(-10deg) scale(1); }
+      50% { transform: skewX(-10deg) scale(1.05); }
+    }
+
+    .hero h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(60px, 10vw, 140px);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 8px;
+      line-height: 0.9;
+      margin-bottom: 30px;
+      background: linear-gradient(135deg, var(--accent-3) 0%, var(--accent-4) 50%, var(--accent-1) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      text-shadow: 0 0 80px rgba(0, 255, 159, 0.5);
+      animation: titleGlitch 5s infinite;
+    }
+
+    @keyframes titleGlitch {
+      0%, 90%, 100% { transform: translate(0, 0); }
+      91% { transform: translate(-5px, 2px); filter: hue-rotate(90deg); }
+      92% { transform: translate(5px, -2px); filter: hue-rotate(-90deg); }
+      93% { transform: translate(-3px, 1px); }
+      94% { transform: translate(0, 0); filter: hue-rotate(0deg); }
+    }
+
+    .hero .subtitle {
+      font-size: clamp(16px, 2vw, 22px);
+      color: var(--text-secondary);
+      max-width: 900px;
+      margin: 0 auto 50px;
+      line-height: 1.8;
+      border-left: 4px solid var(--accent-2);
+      border-right: 4px solid var(--accent-2);
+      padding: 0 30px;
+      transform: skewX(-2deg);
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 18px 40px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border: 3px solid;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+      clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.5s ease, height 0.5s ease;
+      border-radius: 50%;
+    }
+
+    .btn:hover::before {
+      width: 400px;
+      height: 400px;
+    }
+
+    .btn span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-primary {
+      background: var(--accent-1);
+      border-color: var(--accent-1);
+      color: #000;
+      font-weight: 700;
+      box-shadow: 0 0 20px var(--accent-1), 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 0 40px var(--accent-1), 0 20px 50px rgba(0, 0, 0, 0.7);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--accent-3);
+      color: var(--accent-3);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-3);
+      color: #000;
+      transform: translateY(-5px) scale(1.05);
+    }
+
+    /* SECTIONS */
+    section {
+      margin: 150px 0;
+      position: relative;
+    }
+
+    .section-header {
+      margin-bottom: 80px;
+      position: relative;
+    }
+
+    .section-number {
+      font-family: 'Orbitron', monospace;
+      font-size: 120px;
+      font-weight: 900;
+      color: transparent;
+      -webkit-text-stroke: 2px var(--accent-1);
+      position: absolute;
+      top: -60px;
+      left: -40px;
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    section h2 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(40px, 6vw, 70px);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      position: relative;
+      display: inline-block;
+    }
+
+    section h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-3));
+      transform: skewX(-20deg);
+    }
+
+    section .section-subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 800px;
+      border-left: 3px solid var(--accent-3);
+      padding-left: 20px;
+    }
+
+    /* CARDS GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 60px;
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(255, 56, 100, 0.05), rgba(0, 255, 159, 0.05));
+      border: 2px solid var(--accent-1);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+      transition: all 0.4s ease;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 56, 100, 0.1), rgba(0, 255, 159, 0.1));
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: -1;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(255, 56, 100, 0.3);
+      border-color: var(--accent-3);
+    }
+
+    .card-icon {
+      font-size: 50px;
+      margin-bottom: 20px;
+      display: inline-block;
+      transform: rotate(-10deg);
+    }
+
+    .card h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      color: var(--accent-3);
+    }
+
+    .card p {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    /* EXPERIENCE - DIAGONAL LAYOUT */
+    .experience-list {
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+      margin-top: 60px;
+    }
+
+    .experience-item {
+      background: linear-gradient(135deg, rgba(15, 15, 15, 0.8), rgba(25, 25, 25, 0.8));
+      border: 2px solid var(--accent-2);
+      padding: 40px;
+      position: relative;
+      transform: skewY(-1deg);
+      transition: all 0.4s ease;
+      overflow: hidden;
+    }
+
+    .experience-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 56, 100, 0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .experience-item:hover::before {
+      left: 100%;
+    }
+
+    .experience-item:hover {
+      transform: skewY(-1deg) translateX(20px) scale(1.02);
+      border-color: var(--accent-3);
+      box-shadow: -10px 10px 40px rgba(0, 255, 159, 0.3);
+    }
+
+    .experience-item > * {
+      transform: skewY(1deg);
+    }
+
+    .experience-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .experience-item h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      margin-bottom: 8px;
+    }
+
+    .company {
+      font-family: 'Orbitron', monospace;
+      color: var(--accent-3);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .metrics {
+      font-size: 14px;
+      color: var(--accent-4);
+      font-style: italic;
+      text-align: right;
+    }
+
+    .experience-item p {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    /* CONTACT SECTION */
+    .contact-section {
+      margin-top: 200px;
+      text-align: center;
+      padding: 100px 40px;
+      background: linear-gradient(135deg, rgba(255, 56, 100, 0.1), rgba(0, 255, 159, 0.1));
+      border: 3px solid var(--accent-1);
+      position: relative;
+      overflow: hidden;
+      clip-path: polygon(0 5%, 100% 0, 100% 95%, 0 100%);
+    }
+
+    .contact-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 56, 100, 0.05) 10px,
+        rgba(255, 56, 100, 0.05) 20px
+      );
+      animation: stripeScroll 20s linear infinite;
+    }
+
+    @keyframes stripeScroll {
+      from { transform: translate(0, 0); }
+      to { transform: translate(50px, 50px); }
+    }
+
+    .contact-section h2 {
+      font-size: clamp(50px, 8vw, 90px);
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-section h2::after {
+      display: none;
+    }
+
+    .contact-section p {
+      font-size: 20px;
+      color: var(--text-secondary);
+      margin-bottom: 50px;
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .contact-links {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 3px solid var(--accent-1);
+      padding: 60px 40px;
+      text-align: center;
+      margin-top: 100px;
+      background: linear-gradient(180deg, transparent, rgba(255, 56, 100, 0.05));
+    }
+
+    footer p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    footer .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    footer .social-links a {
+      color: var(--accent-3);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    footer .social-links a::before {
+      content: '[';
+      margin-right: 5px;
+    }
+
+    footer .social-links a::after {
+      content: ']';
+      margin-left: 5px;
+    }
+
+    footer .social-links a:hover {
+      color: var(--accent-1);
+      text-shadow: 0 0 20px var(--accent-1);
+      transform: scale(1.1);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .container { padding: 20px; }
+      nav { padding: 15px 20px; }
+      nav .logo { font-size: 20px; }
+      nav .nav-links { gap: 20px; font-size: 16px; }
+      .section-number { font-size: 60px; top: -30px; left: -20px; }
+      .grid { grid-template-columns: 1fr; }
+      .experience-item { transform: skewY(0); }
+      .experience-item > * { transform: skewY(0); }
+      .btn { padding: 14px 30px; font-size: 18px; }
+    }
+
+    /* Scroll reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s ease;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Glitch scan line -->
+  <div class="glitch-line"></div>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="nav-content">
+      <div class="logo">0XDEOLA</div>
+      <div class="nav-links">
+        <a href="#about">ABOUT</a>
+        <a href="#services">SERVICES</a>
+        <a href="#experience">WORK</a>
+        <a href="#contact">CONTACT</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-tag">⚡ AVAILABLE FOR WEB3 PROJECTS</div>
+      <h1>ADEOLA<br><span style="font-size: 0.6em;">(0XDEOLA)</span></h1>
+      <p class="subtitle">
+        WEB3 COMMUNITY MODERATOR & CONTENT CREATOR // BUILDING CALM, INFORMED, 
+        & TRUSTWORTHY COMMUNITIES THROUGH EDUCATION + STRUCTURE
+      </p>
+      <div class="hero-buttons">
+        <a href="#experience" class="btn btn-primary"><span>VIEW EXPERIENCE</span></a>
+        <a href="mailto:johnsamxy@gmail.com" class="btn btn-secondary"><span>GET IN TOUCH</span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <!-- ABOUT -->
+    <section id="about" class="reveal">
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>ABOUT ME</h2>
+        <p class="section-subtitle">
+          I'm a Web3 community moderator and creator with experience supporting large
+          blockchain communities. I focus on clarity, safety, and long-term value —
+          not hype. I help users understand products, maintain healthy discussions,
+          and feel confident engaging with Web3 ecosystems.
+        </p>
+      </div>
+    </section>
+
+    <!-- WHAT I DO -->
+    <section id="services" class="reveal">
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>WHAT I DO</h2>
+        <p class="section-subtitle">
+          SPECIALIZED SERVICES TO BUILD & NURTURE THRIVING WEB3 COMMUNITIES
+        </p>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="card-icon">🛡️</div>
+          <h3>Community Moderation</h3>
+          <p>Rule enforcement, conflict resolution, and maintaining respectful conversations across Discord, Telegram, and other platforms.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎓</div>
+          <h3>User Onboarding</h3>
+          <p>Helping new members understand products, documentation, and updates clearly with personalized guidance.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📹</div>
+          <h3>Content Creation</h3>
+          <p>Educational videos and threads explaining Web3, DeFi, and infrastructure to demystify complex concepts.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📈</div>
+          <h3>Creator-Led Growth</h3>
+          <p>Organic growth driven by education, trust, and consistent presence that builds lasting community value.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" class="reveal">
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>EXPERIENCE</h2>
+        <p class="section-subtitle">
+          PROVEN TRACK RECORD WITH LEADING WEB3 PROJECTS & COMMUNITIES
+        </p>
+      </div>
+
+      <div class="experience-list">
+        <div class="experience-item">
+          <div class="experience-header">
+            <div>
+              <h3>Community Ambassador</h3>
+              <div class="company">MAGIC NEWTON</div>
+            </div>
+            <div class="metrics">Web3 Infrastructure // Moderated 400K+ member community</div>
+          </div>
+          <p>
+            Moderated a large-scale Web3 community with over 400,000 members. Supported 
+            onboarding, answered questions, resolved conflicts, and maintained clarity 
+            across multiple channels. Facilitated educational initiatives and bridged 
+            communication between the team and community members.
+          </p>
+        </div>
+
+        <div class="experience-item">
+          <div class="experience-header">
+            <div>
+              <h3>Community Contributor</h3>
+              <div class="company">CITREA</div>
+            </div>
+            <div class="metrics">Blockchain Ecosystem</div>
+          </div>
+          <p>
+            Actively engaged in discussions, supported members, and contributed feedback
+            to improve communication and community experience. Helped shape community
+            guidelines and fostered positive engagement.
+          </p>
+        </div>
+
+        <div class="experience-item">
+          <div class="experience-header">
+            <div>
+              <h3>Independent Web3 Creator</h3>
+              <div class="company">EDUCATIONAL CONTENT</div>
+            </div>
+            <div class="metrics">Multi-platform presence</div>
+          </div>
+          <p>
+            Creating videos and written content to break down blockchain products,
+            DeFi concepts, and ecosystem updates with a focus on clarity and safety.
+            Building an audience through consistent, high-quality educational materials 
+            that help newcomers navigate Web3 confidently.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact" class="reveal">
+    <div class="contact-section">
+      <h2>LET'S BUILD<br>TOGETHER</h2>
+      <p>READY TO ELEVATE YOUR WEB3 COMMUNITY? LET'S CREATE SOMETHING MEANINGFUL.</p>
+      <div class="contact-links">
+        <a href="mailto:johnsamxy@gmail.com" class="btn btn-primary"><span>EMAIL ME</span></a>
+        <a href="https://x.com/0xdeola" target="_blank" class="btn btn-secondary"><span>FOLLOW ON X</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>BUILDING RESPONSIBLE WEB3 COMMUNITIES, ONE CONVERSATION AT A TIME.</p>
+    <div class="social-links">
+      <a href="mailto:johnsamxy@gmail.com">EMAIL</a>
+      <a href="https://x.com/0xdeola" target="_blank">X / TWITTER</a>
+    </div>
+    <p style="margin-top: 40px; font-size: 14px; color: #666;">© 2025 ADEOLA // ALL RIGHTS RESERVED</p>
+  </footer>
+
+  <script>
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Scroll reveal animation
+    const reveals = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    reveals.forEach(reveal => revealObserver.observe(reveal));
+
+    // Cursor trail effect
+    let dots = [];
+    const cursor = document.createElement('div');
+    cursor.style.cssText = 'position:fixed;width:8px;height:8px;background:var(--accent-1);border-radius:50%;pointer-events:none;z-index:9999;mix-blend-mode:screen;';
+    document.body.appendChild(cursor);
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX - 4 + 'px';
+      cursor.style.top = e.clientY - 4 + 'px';
+      
+      // Create trail dot
+      if (Math.random() > 0.8) {
+        const dot = document.createElement('div');
+        dot.style.cssText = `position:fixed;width:4px;height:4px;background:var(--accent-3);border-radius:50%;pointer-events:none;z-index:9998;left:${e.clientX-2}px;top:${e.clientY-2}px;opacity:0.8;transition:opacity 1s;`;
+        document.body.appendChild(dot);
+        setTimeout(() => { dot.style.opacity = '0'; }, 10);
+        setTimeout(() => { dot.remove(); }, 1000);
+      }
+    });
+
+    // Random glitch effect on title
+    setInterval(() => {
+      if (Math.random() > 0.95) {
+        const title = document.querySelector('.hero h1');
+        title.style.transform = `translate(${Math.random() * 4 - 2}px, ${Math.random() * 4 - 2}px)`;
+        setTimeout(() => { title.style.transform = 'translate(0, 0)'; }, 100);
+      }
+    }, 100);
+  </script>
+
+</body>
+</html>
